@@ -1,7 +1,7 @@
 const express = require("express");
 const sqlRequest = require("../database/connect");
-const router = express.Router();
-router.get("/getLikeAndArticle",(req, res)=> {
+const home = express.Router();
+home.get("/getLikeAndArticle",(req, res)=> {
     const sql = "select numberOfLike, numberOfArticle from information";
     sqlRequest(sql).then((value)=> {
         // console.log(value);
@@ -11,7 +11,7 @@ router.get("/getLikeAndArticle",(req, res)=> {
     })
 })
 
-router.get("/getLabel", (req, res)=> {
+home.get("/getLabel", (req, res)=> {
     // const sql = "select distinct labelName from label";
     const sql = "select labelName, count(labelName) as number from label group by labelName";
     sqlRequest(sql).then((value)=>{
@@ -22,7 +22,17 @@ router.get("/getLabel", (req, res)=> {
     })
 })
 
-router.post("/setLike", (req, res)=> {
+// 获取Timeline数据
+home.get("/getTimelineData", (req, res)=> {
+    const sql = "select * from websiteTimeline";
+    sqlRequest(sql).then(v=> {
+        res.send(v);
+    }, r=> {
+        // 错误处理
+    })
+})
+
+home.post("/setLike", (req, res)=> {
     const updateSql = "update information set numberOfLike = numberOfLike + 1";
     sqlRequest(updateSql).then((v)=> {
         // console.log(v);
@@ -36,4 +46,4 @@ router.post("/setLike", (req, res)=> {
         // 错误处理
     })
 })
-module.exports = router;
+module.exports = home;

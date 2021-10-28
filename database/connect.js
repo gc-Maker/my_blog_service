@@ -5,11 +5,11 @@ const pool = mysql.createPool({
     database: 'my_blog'
 })
 
-module.exports = function sqlRequest(sql) {
+module.exports = function sqlRequest(sql, props) {
     return new Promise((resolve, reject) => {
         pool.getConnection((err, connection) => {
             if(!err) {
-                connection.query(sql, (e, results)=> {
+                connection.query(sql, props,(e, results)=> {
                     if(!e) {
                         resolve(results);
                     } else {

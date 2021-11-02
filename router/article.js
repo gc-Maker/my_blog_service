@@ -2,20 +2,31 @@ const express = require("express");
 const sqlRequest = require("../database/connect");
 const article = express.Router();
 article.get("/getArticleDesc", (req, res)=> {
-    const sql = "select min(labelId) as labelId from relationarticlelabel";
-    sqlRequest(sql).then(v=> {
-        const {labelId} = v[0];
-        const sql1 = "select a.title, a.ctime from relationarticlelabel as r join article as a " + 
-        `where r.labelId = ${labelId} and r.articleId = a.id`;
-        sqlRequest(sql1).then(v=> {
+    const {labelId} = req.query;
+    if (labelId) {
+        const sql = "select a.title, a.ctime from relationarticlelabel as r join article as a " + 
+            `where r.labelId = ${labelId} and r.articleId = a.id`;
+        sqlRequest(sql).then(v=> {
             res.send(v);
         }, r=> {
             console.log(r);
         })
-    } , r=> {
-        // 错误处理
-        console.log(r);
-    })
+    } else {
+        const sql = "select min(labelId) as labelId from relationarticlelabel";
+        sqlRequest(sql).then(v=> {
+            const {labelId} = v[0];
+            const sql1 = "select a.title, a.ctime from relationarticlelabel as r join article as a " + 
+            `where r.labelId = ${labelId} and r.articleId = a.id`;
+            sqlRequest(sql1).then(v=> {
+                res.send(v);
+            }, r=> {
+                console.log(r);
+            })
+        } , r=> {
+            // 错误处理
+            console.log(r);
+        })
+    }
 })
 
 

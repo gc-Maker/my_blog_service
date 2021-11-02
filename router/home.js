@@ -13,10 +13,7 @@ home.get("/getLikeAndArticle",(req, res)=> {
 
 home.get("/getLabel", (req, res)=> {
     // const sql = "select distinct labelName from label";
-    const sql = "select l.labelName, count(r.labelId) as number from relationarticlelabel as r join label as l where r.labelId = l.id group by labelId";
-    // sqlRequest(sql1).then(v=> {
-    //     console.log(v);
-    // })
+    const sql = "select l.labelName, count(r.labelId) as number, l.id from relationarticlelabel as r join label as l where r.labelId = l.id group by labelId";
     sqlRequest(sql).then((value)=>{
         // console.log(value);
         res.send(value);
